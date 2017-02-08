@@ -1,7 +1,7 @@
 {
   "name": "generator-express-pgp-typescript",
-  "version": "0.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "express pg-promise generator with typescript",
   "homepage": "",
   "author": {
     "name": "Ha",
@@ -52,7 +52,7 @@
       "mocha": true
     }
   },
-  "repository": "icepeng/generator-express-pgp-typescript",
+  "repository": "https://github.com/icepeng/generator-express-pgp-typescript.git",
   "scripts": {
     "prepublish": "gulp prepublish",
     "test": "gulp"
