@@ -21,3 +21,5 @@ const options = {
 pgp = pgPromise(options);
 
 export const Model = <IDatabase<IExtensions>&IExtensions>pgp(pgConfig);
+
+// export interfaces here
