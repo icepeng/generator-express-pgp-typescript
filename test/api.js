@@ -1,18 +1,19 @@
-'use strict';
-var path = require('path');
-var assert = require('yeoman-assert');
-var helpers = require('yeoman-test');
+/* global describe before it */
+const path = require('path');
+const assert = require('yeoman-assert');
+const helpers = require('yeoman-test');
 
-describe('generator-express-pgp-typescript:api', function () {
-  before(function () {
-    return helpers.run(path.join(__dirname, '../generators/api'))
-      .withPrompts({someAnswer: true})
-      .toPromise();
-  });
+describe('generator-express-pgp-typescript:api', () => {
+    before(() => helpers.run(path.join(__dirname, '../generators/api'))
+        .withPrompts({
+            name: 'yoshi',
+            rest: false,
+        })
+        .toPromise());
 
-  it('creates files', function () {
-    assert.file([
-      'dummyfile.txt'
-    ]);
-  });
+    it('creates files', () => {
+        assert.file([
+            'src/model/repos/yoshi.ts',
+        ]);
+    });
 });

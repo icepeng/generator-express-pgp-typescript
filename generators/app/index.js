@@ -5,9 +5,7 @@ const yosay = require('yosay');
 module.exports = Generator.extend({
     prompting() {
         // Have Yeoman greet the user.
-        this.log(yosay(
-            'Welcome to the impeccable ' + chalk.red('generator-express-pgp-typescript') + ' generator!'
-        ));
+        this.log(yosay(`Welcome to the impeccable ${chalk.red('generator-express-pgp-typescript')} generator!`));
 
         const prompts = [{
             type: 'input',

@@ -7,12 +7,10 @@ const rewrite = require('./util').rewrite;
 module.exports = Generator.extend({
     prompting() {
         // Have Yeoman greet the user.
-        this.log(yosay(
-            'Welcome to the top-notch ' + chalk.red('generator-express-pgp-typescript') + ' generator!'
-        ));
+        this.log(yosay(`Welcome to the top-notch ${chalk.red('generator-express-pgp-typescript')} generator!`));
 
         const self = this;
-        return co(function*() {
+        return co(function* () {
             const props = yield self.prompt([{
                 type: 'input',
                 name: 'name',
@@ -102,7 +100,7 @@ module.exports = Generator.extend({
                 `export { ${args.interfaceName} } from './repos/${args.modelName}';`,
             ],
         });
-        console.info(`   ${chalk.yellow('update')} src/model/index.ts`);
+        console.log(`   ${chalk.yellow('update')} src/model/index.ts`);
         if (props.rest) {
             this.fs.copyTpl(
                 this.templatePath('route.ts'),
@@ -122,7 +120,7 @@ module.exports = Generator.extend({
                     `this.express.use('/api/v1/${args.pluralName}', ${args.interfaceName}Router);`,
                 ],
             });
-            console.info(`   ${chalk.yellow('update')} src/routes/index.ts`);
+            console.log(`   ${chalk.yellow('update')} src/routes/index.ts`);
         }
     },
 });

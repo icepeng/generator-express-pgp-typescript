@@ -1,8 +1,7 @@
 const fs = require('fs');
-const chalk = require('chalk');
 
-const rewrite = args => {
-    let lines = args.haystack.split('\n');
+const rewrite = (args) => {
+    const lines = args.haystack.split('\n');
 
     let otherwiseLineIndex = -1;
     lines.forEach((line, i) => {
@@ -22,16 +21,18 @@ const rewrite = args => {
         spaceStr += ' ';
     }
 
-    lines.splice(otherwiseLineIndex + 1, 0, args.splicable.map(function(line) {
-        return spaceStr + line;
-    }).join('\n'));
+    lines.splice(otherwiseLineIndex + 1, 0, args.splicable.map(line => spaceStr + line).join('\n'));
 
     return lines.join('\n');
 };
 
-exports.rewrite = args => {
-    args.haystack = fs.readFileSync(args.file, 'utf8');
-    const body = rewrite(args);
-
-    fs.writeFileSync(args.file, body);
+exports.rewrite = (args) => {
+    fs.readFile(args.file, 'utf8', (err, data) => {
+        if (err) {
+            return;
+        }
+        args.haystack = data;
+        const body = rewrite(args);
+        fs.writeFile(args.file, body);
+    });
 };
