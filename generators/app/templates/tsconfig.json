@@ -10,9 +10,13 @@
     "types": ["node"]
   },
   "filesGlob": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "!src/**/*.spec.ts"
   ],
   "include": [
     "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts"
   ]
 }

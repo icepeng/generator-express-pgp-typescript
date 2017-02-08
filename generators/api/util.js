@@ -27,11 +27,13 @@ const rewrite = (args) => {
 };
 
 exports.rewrite = (args) => {
-    fs.readFile(args.file, 'utf8', (err, data) => {
-        if (err) {
-            return;
-        }
-        const body = rewrite(Object.assign({ haystack: data }, args));
-        fs.writeFile(args.file, body);
-    });
+    const input = args;
+    try {
+        input.haystack = fs.readFileSync(args.file, 'utf8');
+    } catch (err) {
+        console.log(`${args.file} not exists`);
+        return;
+    }
+    const body = rewrite(input);
+    fs.writeFileSync(args.file, body);
 };
