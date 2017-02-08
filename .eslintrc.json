@@ -3,6 +3,7 @@
   "rules": {
     "indent": ["error", 4],
     "no-constant-condition": ["error", { "checkLoops": false }],
-    "no-console": ["off"]
+    "no-console": ["off"],
+    "func-names": ["off"]
   }
 }

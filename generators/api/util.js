@@ -17,7 +17,7 @@ const rewrite = (args) => {
     }
 
     let spaceStr = '';
-    while ((spaces -= 1) >= 0) {
+    for (let i = spaces; i > 0; i -= 1) {
         spaceStr += ' ';
     }
 
@@ -31,8 +31,7 @@ exports.rewrite = (args) => {
         if (err) {
             return;
         }
-        args.haystack = data;
-        const body = rewrite(args);
+        const body = rewrite(Object.assign({ haystack: data }, args));
         fs.writeFile(args.file, body);
     });
 };

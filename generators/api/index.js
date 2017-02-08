@@ -63,7 +63,7 @@ module.exports = Generator.extend({
             inputSchema: '',
         };
         args.columns = props.properties.map(property => property.name).join(', ');
-        args.values = props.properties.map(property => '${' + property.name + '}').join(', ');
+        args.values = props.properties.map(property => `\${${property.name}}`).join(', ');
         props.properties.forEach((property) => {
             args.properties = args.properties.concat(`\n    ${property.name}${property.required ? '' : '?'}: ${property.type};`);
             args.inputSchema = args.inputSchema.concat(`            ${property.name}: Joi.${property.type}()${property.required ? '.required()' : ''},\n`);
