@@ -106,6 +106,10 @@ module.exports = Generator.extend({
                 this.templatePath('route.ts'),
                 this.destinationPath(`src/routes/${props.name}/index.ts`),
                 args);
+            this.fs.copyTpl(
+                this.templatePath('spec.ts'),
+                this.destinationPath(`src/routes/${props.name}/index.spec.ts`),
+                args);
             rewrite({
                 file: 'src/routes/index.ts',
                 needle: '// import routes here',
