@@ -24,8 +24,7 @@ describe('GET api/v1/<%= pluralName %>', () => {
                 const <%= interfaceName %> = res.body.<%= pluralName %>[0];
                 expect(<%= interfaceName %>).to.exist;
                 expect(<%= interfaceName %>).to.have.all.keys([
-                    <%= keys %>
-                ]);
+<%- keys %>                ]);
             });
     });
 
