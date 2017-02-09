@@ -6,8 +6,11 @@ const helpers = require('yeoman-test');
 describe('generator-express-pgp-typescript:api', () => {
     before(() => helpers.run(path.join(__dirname, '../generators/api'))
         .withPrompts({
-            name: 'yoshi',
+            basicName: 'yoshi',
             rest: false,
+        })
+        .withPrompts({
+            name: '',
         })
         .toPromise());
 

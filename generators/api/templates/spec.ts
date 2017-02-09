@@ -21,9 +21,11 @@ describe('GET api/v1/<%= pluralName %>', () => {
     it('should include <%= interfaceName %>', () => {
         return chai.request(app).get('/api/v1/<%= pluralName %>')
             .then(res => {
-                const <%= interfaceName %> = res.body.<%= pluralName %>[0];
+                const <%= interfaceName %> = res.body.<%= pluralCamelName %>[0];
                 expect(<%= interfaceName %>).to.exist;
                 expect(<%= interfaceName %>).to.have.all.keys([
+                'id',
+                'create_time',
 <%- keys %>                ]);
             });
     });

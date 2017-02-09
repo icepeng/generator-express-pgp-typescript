@@ -1,6 +1,6 @@
 {
   "name": "generator-express-pgp-typescript",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "express pg-promise generator with typescript",
   "homepage": "",
   "author": {

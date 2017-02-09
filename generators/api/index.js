@@ -4,6 +4,18 @@ const yosay = require('yosay');
 const co = require('co');
 const rewrite = require('./util').rewrite;
 
+function snakeToCamel(s) {
+    return s.replace(/(_\w)/g, m => m[1].toUpperCase());
+}
+
+function kebabToCamel(s) {
+    return s.replace(/(-\w)/g, m => m[1].toUpperCase());
+}
+
+function toCapital(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 module.exports = Generator.extend({
     prompting() {
         // Have Yeoman greet the user.
@@ -13,41 +25,41 @@ module.exports = Generator.extend({
         return co(function* () {
             const props = yield self.prompt([{
                 type: 'input',
-                name: 'name',
-                message: 'Model name?',
+                name: 'basicName',
+                message: 'Model name? (snake_case)',
             }, {
                 type: 'confirm',
                 name: 'rest',
                 message: 'Create REST API?',
             }]);
-            props.properties = [];
             if (props.rest) {
                 props.plural = (yield self.prompt({
                     type: 'input',
                     name: 'plural',
-                    message: 'Plural name? (REST collection)',
+                    message: 'Plural name? (kebab-case)',
                 })).plural;
-                while (true) {
-                    const property = yield self.prompt({
-                        type: 'input',
-                        name: 'name',
-                        message: 'Property name? (leave blank for done)',
-                    });
-                    if (!property.name) {
-                        break;
-                    }
-                    Object.assign(property, yield self.prompt([{
-                        type: 'input',
-                        name: 'type',
-                        message: 'Property type?',
-                        default: 'string',
-                    }, {
-                        type: 'confirm',
-                        name: 'required',
-                        message: 'Required?',
-                    }]));
-                    props.properties.push(property);
+            }
+            props.properties = [];
+            while (true) {
+                const property = yield self.prompt({
+                    type: 'input',
+                    name: 'name',
+                    message: 'Property name? (leave blank for done)',
+                });
+                if (!property.name) {
+                    break;
                 }
+                Object.assign(property, yield self.prompt([{
+                    type: 'input',
+                    name: 'type',
+                    message: 'Property type?',
+                    default: 'string',
+                }, {
+                    type: 'confirm',
+                    name: 'required',
+                    message: 'Required?',
+                }]));
+                props.properties.push(property);
             }
             self.props = props;
         });
@@ -56,9 +68,9 @@ module.exports = Generator.extend({
     writing() {
         const props = this.props;
         const args = {
-            modelName: props.name,
-            interfaceName: props.name.charAt(0).toUpperCase() + props.name.slice(1),
-            pluralName: props.plural,
+            tableName: props.basicName,
+            modelName: snakeToCamel(props.basicName),
+            interfaceName: toCapital(snakeToCamel(props.basicName)),
             properties: 'id?: string;\n    create_time: Date;',
             inputSchema: '',
             keys: '',
@@ -68,17 +80,17 @@ module.exports = Generator.extend({
         props.properties.forEach((property) => {
             args.properties = args.properties.concat(`\n    ${property.name}${property.required ? '' : '?'}: ${property.type};`);
             args.inputSchema = args.inputSchema.concat(`            ${property.name}: Joi.${property.type}()${property.required ? '.required()' : ''},\n`);
-            args.keys = args.keys.concat(`                    '${property.name}'\n`);
+            args.keys = args.keys.concat(`                    '${property.name},'\n`);
         });
         this.fs.copyTpl(
             this.templatePath('repo.ts'),
-            this.destinationPath(`src/model/repos/${props.name}.ts`),
+            this.destinationPath(`src/model/repos/${props.basicName}.ts`),
             args);
         rewrite({
             file: 'src/model/index.ts',
             needle: '// import repos here',
             splicable: [
-                `import { ${args.interfaceName}Repo } from './repos/${args.modelName}';`,
+                `import { ${args.interfaceName}Repo } from './repos/${args.tableName}';`,
             ],
         });
         rewrite({
@@ -99,31 +111,33 @@ module.exports = Generator.extend({
             file: 'src/model/index.ts',
             needle: '// export interfaces here',
             splicable: [
-                `export { ${args.interfaceName} } from './repos/${args.modelName}';`,
+                `export { ${args.interfaceName} } from './repos/${args.tableName}';`,
             ],
         });
         console.log(`   ${chalk.yellow('update')} src/model/index.ts`);
         if (props.rest) {
+            args.pluralName = props.plural;
+            args.pluralCamelName = kebabToCamel(props.plural);
             this.fs.copyTpl(
                 this.templatePath('route.ts'),
-                this.destinationPath(`src/routes/${props.name}/index.ts`),
+                this.destinationPath(`src/routes/${props.basicName}/index.ts`),
                 args);
             this.fs.copyTpl(
                 this.templatePath('spec.ts'),
-                this.destinationPath(`src/routes/${props.name}/index.spec.ts`),
+                this.destinationPath(`src/routes/${props.basicName}/index.spec.ts`),
                 args);
             rewrite({
                 file: 'src/routes/index.ts',
                 needle: '// import routes here',
                 splicable: [
-                    `import ${args.interfaceName}Router from './${args.modelName}';`,
+                    `import ${args.interfaceName}Router from './${args.tableName}';`,
                 ],
             });
             rewrite({
                 file: 'src/routes/index.ts',
                 needle: '// use routes here',
                 splicable: [
-                    `this.express.use('/api/v1/${args.pluralName}', ${args.interfaceName}Router);`,
+                    `this.express.use('/api/v1/${args.pluralCamelName}', ${args.interfaceName}Router);`,
                 ],
             });
             console.log(`   ${chalk.yellow('update')} src/routes/index.ts`);

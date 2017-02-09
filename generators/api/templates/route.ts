@@ -13,10 +13,10 @@ export class <%= interfaceName %>Router {
 
     public async getAll(req: Request, res: Response, next: NextFunction) {
         try {
-            const <%= pluralName %> = await Model.<%= modelName %>.all();
+            const <%= pluralCamelName %> = await Model.<%= modelName %>.all();
             res.status(200).send({
                 message: 'Success',
-                <%= pluralName %>,
+                <%= pluralCamelName %>,
             });
         } catch (err) {
             next(err);
