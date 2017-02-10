@@ -93,7 +93,7 @@ export class <%= interfaceName %>Router {
         const <%= modelName %> = req.body;
         const schema = Joi.object().keys({
 <%= inputSchema %>        });
-        Joi.assert(<%= modelName %>, schema);
+        req.body = Joi.attempt(<%= modelName %>, schema);
         next();
     }
 

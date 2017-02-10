@@ -2,7 +2,7 @@ import * as mocha from 'mocha';
 import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
-import app from '../src/app';
+import app from '../';
 
 chai.use(chaiHttp);
 const expect = chai.expect;
@@ -24,8 +24,8 @@ describe('GET api/v1/<%= pluralName %>', () => {
                 const <%= interfaceName %> = res.body.<%= pluralCamelName %>[0];
                 expect(<%= interfaceName %>).to.exist;
                 expect(<%= interfaceName %>).to.have.all.keys([
-                'id',
-                'create_time',
+                    'id',
+                    'create_time',
 <%- keys %>                ]);
             });
     });

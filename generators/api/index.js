@@ -80,7 +80,7 @@ module.exports = Generator.extend({
         props.properties.forEach((property) => {
             args.properties = args.properties.concat(`\n    ${property.name}${property.required ? '' : '?'}: ${property.type};`);
             args.inputSchema = args.inputSchema.concat(`            ${property.name}: Joi.${property.type}()${property.required ? '.required()' : ''},\n`);
-            args.keys = args.keys.concat(`                    '${property.name},'\n`);
+            args.keys = args.keys.concat(`                    '${property.name}',\n`);
         });
         this.fs.copyTpl(
             this.templatePath('repo.ts'),
