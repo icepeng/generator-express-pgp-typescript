@@ -28,12 +28,7 @@ const rewrite = (args) => {
 
 exports.rewrite = (args) => {
     const input = args;
-    try {
-        input.haystack = fs.readFileSync(args.file, 'utf8');
-    } catch (err) {
-        console.log(`${args.file} not exists`);
-        return;
-    }
+    input.haystack = fs.readFileSync(args.file, 'utf8');
     const body = rewrite(input);
     fs.writeFileSync(args.file, body);
 };

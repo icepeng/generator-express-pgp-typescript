@@ -82,39 +82,45 @@ module.exports = Generator.extend({
             args.inputSchema = args.inputSchema.concat(`            ${property.name}: Joi.${property.type}()${property.required ? '.required()' : ''},\n`);
             args.keys = args.keys.concat(`                    '${property.name}',\n`);
         });
+
         this.fs.copyTpl(
             this.templatePath('repo.ts'),
             this.destinationPath(`src/model/repos/${props.basicName}.ts`),
             args);
-        rewrite({
-            file: 'src/model/index.ts',
-            needle: '// import repos here',
-            splicable: [
-                `import { ${args.interfaceName}Repo } from './repos/${args.tableName}';`,
-            ],
-        });
-        rewrite({
-            file: 'src/model/index.ts',
-            needle: '// declare repos here',
-            splicable: [
-                `${args.modelName}: ${args.interfaceName}Repo;`,
-            ],
-        });
-        rewrite({
-            file: 'src/model/index.ts',
-            needle: '// create repos here',
-            splicable: [
-                `obj.${args.modelName} = new ${args.interfaceName}Repo(obj, pgp);`,
-            ],
-        });
-        rewrite({
-            file: 'src/model/index.ts',
-            needle: '// export interfaces here',
-            splicable: [
-                `export { ${args.interfaceName} } from './repos/${args.tableName}';`,
-            ],
-        });
-        console.log(`   ${chalk.yellow('update')} src/model/index.ts`);
+        try {
+            rewrite({
+                file: 'src/model/index.ts',
+                needle: '// import repos here',
+                splicable: [
+                    `import { ${args.interfaceName}Repo } from './repos/${args.tableName}';`,
+                ],
+            });
+            rewrite({
+                file: 'src/model/index.ts',
+                needle: '// declare repos here',
+                splicable: [
+                    `${args.modelName}: ${args.interfaceName}Repo;`,
+                ],
+            });
+            rewrite({
+                file: 'src/model/index.ts',
+                needle: '// create repos here',
+                splicable: [
+                    `obj.${args.modelName} = new ${args.interfaceName}Repo(obj, pgp);`,
+                ],
+            });
+            rewrite({
+                file: 'src/model/index.ts',
+                needle: '// export interfaces here',
+                splicable: [
+                    `export { ${args.interfaceName} } from './repos/${args.tableName}';`,
+                ],
+            });
+            console.log(`   ${chalk.yellow('update')} src/model/index.ts`);
+        } catch (err) {
+            console.log(`   ${chalk.red('error')} src/model/index.ts not exist`);
+        }
+
         if (props.rest) {
             args.pluralName = props.plural;
             args.pluralCamelName = kebabToCamel(props.plural);
@@ -126,21 +132,25 @@ module.exports = Generator.extend({
                 this.templatePath('spec.ts'),
                 this.destinationPath(`src/routes/${props.basicName}/index.spec.ts`),
                 args);
-            rewrite({
-                file: 'src/routes/index.ts',
-                needle: '// import routes here',
-                splicable: [
-                    `import ${args.interfaceName}Router from './${args.tableName}';`,
-                ],
-            });
-            rewrite({
-                file: 'src/routes/index.ts',
-                needle: '// use routes here',
-                splicable: [
-                    `this.express.use('/api/v1/${args.pluralCamelName}', ${args.interfaceName}Router);`,
-                ],
-            });
-            console.log(`   ${chalk.yellow('update')} src/routes/index.ts`);
+            try {
+                rewrite({
+                    file: 'src/routes/index.ts',
+                    needle: '// import routes here',
+                    splicable: [
+                        `import ${args.interfaceName}Router from './${args.tableName}';`,
+                    ],
+                });
+                rewrite({
+                    file: 'src/routes/index.ts',
+                    needle: '// use routes here',
+                    splicable: [
+                        `this.express.use('/api/v1/${args.pluralCamelName}', ${args.interfaceName}Router);`,
+                    ],
+                });
+                console.log(`   ${chalk.yellow('update')} src/routes/index.ts`);
+            } catch (err) {
+                console.log(`   ${chalk.red('error')} src/routes/index.ts not exist`);
+            }
         }
     },
 });
