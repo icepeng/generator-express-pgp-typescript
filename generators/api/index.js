@@ -118,7 +118,7 @@ module.exports = Generator.extend({
             });
             console.log(`   ${chalk.yellow('update')} src/model/index.ts`);
         } catch (err) {
-            console.log(`   ${chalk.red('error')} src/model/index.ts not exist`);
+            console.error(`   ${chalk.red('error')} src/model/index.ts not exist`);
         }
 
         if (props.rest) {
@@ -149,7 +149,7 @@ module.exports = Generator.extend({
                 });
                 console.log(`   ${chalk.yellow('update')} src/routes/index.ts`);
             } catch (err) {
-                console.log(`   ${chalk.red('error')} src/routes/index.ts not exist`);
+                console.error(`   ${chalk.red('error')} src/routes/index.ts not exist`);
             }
         }
     },
