@@ -24,6 +24,7 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^3.0.2 || ^4.0.0",
     "eslint-plugin-react": "^6.9.0",
+    "fs-extra": "^2.0.0",
     "yeoman-generator": "^1.0.0",
     "yosay": "^1.2.1"
   },
