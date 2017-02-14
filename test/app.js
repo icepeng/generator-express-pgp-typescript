@@ -19,6 +19,7 @@ describe('generator-express-pgp-typescript:app', () => {
             'tslint.json',
             'package.json',
             'yarn.lock',
+            '.editorconfig',
         ]);
     });
 });

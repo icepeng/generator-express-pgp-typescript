@@ -52,6 +52,9 @@ module.exports = Generator.extend({
             this.templatePath('gulpfile.js'),
             this.destinationPath('gulpfile.js'));
         this.fs.copy(
+            this.templatePath('.editorconfig'),
+            this.destinationPath('.editorconfig'));
+        this.fs.copy(
             this.templatePath('tsconfig.json'),
             this.destinationPath('tsconfig.json'));
         this.fs.copy(

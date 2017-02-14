@@ -44,10 +44,11 @@ export class <%= interfaceName %>Router {
 
     public async add(req: Request, res: Response, next: NextFunction) {
         try {
-            const <%= modelName %>: <%= interfaceName %> = req.body;
-            await Model.<%= modelName %>.add(<%= modelName %>);
+            const input: <%= interfaceName %> = req.body;
+            const <%= modelName %> = await Model.<%= modelName %>.add(input);
             res.status(200).send({
                 message: 'Success',
+                <%= modelName %>,
             });
         } catch (err) {
             next(err);
@@ -62,7 +63,7 @@ export class <%= interfaceName %>Router {
                     message: 'Success',
                 });
             } else {
-                res.status(400).send({
+                res.status(404).send({
                     message: 'No <%= modelName %> found with the given id.',
                 });
             }
@@ -74,13 +75,15 @@ export class <%= interfaceName %>Router {
     public async edit(req: Request, res: Response, next: NextFunction) {
         try {
             const query = req.params.id;
-            const <%= modelName %>: <%= interfaceName %> = req.body;
-            if (await Model.<%= modelName %>.edit(query, <%= modelName %>)) {
+            const input: <%= interfaceName %> = req.body;
+            const <%= modelName %> = await Model.<%= modelName %>.edit(query, input);
+            if (<%= modelName %>) {
                 res.status(200).send({
                     message: 'Success',
+                    <%= modelName %>,
                 });
             } else {
-                res.status(400).send({
+                res.status(404).send({
                     message: 'No <%= modelName %> found with the given id.',
                 });
             }
@@ -97,12 +100,19 @@ export class <%= interfaceName %>Router {
         next();
     }
 
+    private uuidValidator(req: Request, res: Response, next: NextFunction) {
+        const id = req.params.id;
+        const schema = Joi.string().guid();
+        Joi.assert(id, schema);
+        next();
+    }
+
     run() {
         this.router.get('/', this.getAll);
-        this.router.get('/:id', this.getOne);
+        this.router.get('/:id', this.uuidValidator, this.getOne);
         this.router.post('/', this.inputValidator, this.add);
-        this.router.delete('/:id', this.remove);
-        this.router.put('/:id', this.inputValidator, this.edit);
+        this.router.delete('/:id', this.uuidValidator, this.remove);
+        this.router.put('/:id', [this.uuidValidator, this.inputValidator], this.edit);
     }
 
 }
